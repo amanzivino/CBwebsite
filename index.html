@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shop & Gifting — Ciao Bella Salon</title>
+<title>Ciao Bella Salon - Hair Color & Balayage in Downtown Gainesville, FL</title>
 <meta name="description" content="Family-owned Goldwell Color Salon in Downtown Gainesville since 2002. Balayage, custom color, precision cuts, and R+Co haircare. Book online or call (352) 379-9200.">
 <link rel="canonical" href="https://ciaobellagainesville.com/">
 <meta name="theme-color" content="#3B1F10">
@@ -150,7 +150,10 @@ body {
   }
 }
 
-#root { min-height: 100dvh; }
+#root {
+  min-height: 100dvh;
+  background: var(--white);
+}
 
 /* Taste polish - keyboard a11y, optical type, tinted shadows */
 :focus-visible {
@@ -593,8 +596,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
 </div>
 <script type="text/babel">
 
-const MAIN = 'index.html';
-
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "heroPhoto": "IMG_8229",
   "accentColor": "#A65A18",
@@ -721,7 +722,7 @@ const Ticker = ({ scrolled }) => {
   const repeated = [...items, ...items, ...items];
   return (
     <div className="cb-ticker" style={{
-      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 101,
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 101,
       overflow: 'hidden', background: C.burntCopper, padding: '9px 0',
       transform: scrolled ? 'translateY(-100%)' : 'translateY(0)',
       transition: 'transform 300ms ease',
@@ -754,20 +755,19 @@ const Ticker = ({ scrolled }) => {
 
 // ─── Nav ──────────────────────────────────────────────────────────────────────
 const NAV_LINKS = [
-  { id: 'about',     label: 'About', href: MAIN + '#about' },
-  { id: 'services',  label: 'Services', href: MAIN + '#services' },
-  { id: 'ourwork',   label: 'Our Work', href: MAIN + '#ourwork' },
-  { id: 'team',      label: 'Team', href: MAIN + '#team' },
-  { id: 'contact',   label: 'Visit', href: MAIN + '#contact' },
+  { id: 'about',     label: 'About', href: '#about' },
+  { id: 'services',  label: 'Services', href: '#services' },
+  { id: 'ourwork',   label: 'Our Work', href: '#ourwork' },
+  { id: 'team',      label: 'Team', href: '#team' },
+  { id: 'contact',   label: 'Visit', href: '#contact' },
   { id: 'newguests', label: 'New Guests', href: 'new-guests.html' },
   { id: 'careers',   label: 'Careers', href: 'careers.html' },
   { id: 'shop',      label: 'Shop', href: 'shop.html', action: true },
 ];
 
-const Nav = ({ scrolled, activeSection, onNav, tweaks, solid }) => {
-  const look = solid || scrolled;
-  const shadow = look ? '0 2px 20px rgba(59,31,16,0.10)' : 'none';
-  const linkColor = look ? C.deepBrown : C.white;
+const Nav = ({ scrolled, activeSection, onNav, tweaks }) => {
+  const shadow = scrolled ? '0 2px 20px rgba(59,31,16,0.10)' : 'none';
+  const linkColor = scrolled ? C.deepBrown : C.white;
   const [open, setOpen] = React.useState(false);
 
   // Lock body scroll while drawer is open
@@ -798,24 +798,28 @@ const Nav = ({ scrolled, activeSection, onNav, tweaks, solid }) => {
         position: 'fixed',
         top: scrolled ? 0 : 38,
         left: 0, right: 0, zIndex: 100,
-        background: scrolled ? 'rgba(255,255,255,0.95)' : 'transparent',
+        background: scrolled ? 'rgba(255,255,255,0.97)' : 'transparent',
         boxShadow: shadow,
         transition: 'background 300ms ease, box-shadow 300ms ease, top 300ms ease',
+        backdropFilter: scrolled ? 'blur(8px)' : 'none',
+        WebkitBackdropFilter: scrolled ? 'blur(8px)' : 'none',
+        isolation: 'isolate',
       }}>
         <div className="cb-nav-inner" style={{
           maxWidth: 1320, margin: '0 auto',
           padding: '0 56px',
           height: 72, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24,
+          position: 'relative', zIndex: 1,
         }}>
           {/* Logo */}
-          <a href={MAIN} className="cb-nav-logo-link" onClick={() => handleNav('hero')} style={{ textDecoration: 'none', flexShrink: 0, transition: 'opacity 160ms ease, visibility 160ms ease' }}>
+          <a href="#hero" className="cb-nav-logo-link" onClick={() => handleNav('hero')} style={{ textDecoration: 'none', flexShrink: 0, transition: 'opacity 160ms ease, visibility 160ms ease', position: 'relative', zIndex: 2 }}>
             <img src="cblogo.jpg" className="cb-nav-logo" alt="Ciao Bella Salon logo - hair color salon in Downtown Gainesville, FL"
               style={{ height: scrolled ? 34 : 38, transition: 'height 300ms ease', objectFit: 'contain' }}
             />
           </a>
 
           {/* Desktop links */}
-          <div className="cb-nav-desktop" style={{ display: 'flex', gap: 26, alignItems: 'center', flexShrink: 0 }}>
+          <div className="cb-nav-desktop" style={{ display: 'flex', gap: 26, alignItems: 'center', flexShrink: 0, position: 'relative', zIndex: 2 }}>
             {NAV_LINKS.map(link => {
               const active = activeSection === link.id;
               return (
@@ -824,11 +828,12 @@ const Nav = ({ scrolled, activeSection, onNav, tweaks, solid }) => {
                   style={{
                     fontFamily: 'var(--font-body)', fontWeight: link.action ? 700 : 600, fontSize: 11,
                     letterSpacing: '0.15em', textTransform: 'uppercase',
-                    color: link.action ? (look ? tweaks.accentColor : C.cream) : (active ? (look ? C.burntCopper : C.cream) : linkColor),
+                    color: link.action ? (scrolled ? tweaks.accentColor : C.cream) : (active ? (scrolled ? C.burntCopper : C.cream) : linkColor),
                     textDecoration: 'none', cursor: 'pointer',
                     borderBottom: active ? `2px solid ${tweaks.accentColor}` : '2px solid transparent',
                     paddingBottom: 2, whiteSpace: 'nowrap',
                     transition: 'color 200ms ease, border-color 200ms ease',
+                    position: 'relative', zIndex: 2,
                   }}
                 >{link.label}</a>
               );
@@ -841,6 +846,7 @@ const Nav = ({ scrolled, activeSection, onNav, tweaks, solid }) => {
                 padding: '10px 22px', borderRadius: 999, textDecoration: 'none',
                 transition: 'background 200ms ease', whiteSpace: 'nowrap',
                 boxShadow: '0 2px 8px rgba(166,90,24,0.25)',
+                position: 'relative', zIndex: 2,
               }}
               onMouseEnter={e => e.currentTarget.style.background = C.chocolate}
               onMouseLeave={e => e.currentTarget.style.background = tweaks.accentColor}
@@ -855,11 +861,11 @@ const Nav = ({ scrolled, activeSection, onNav, tweaks, solid }) => {
             onClick={() => setOpen(o => !o)}
             style={{
               width: 44, height: 44,
-              background: look ? 'rgba(166,90,24,0.08)' : 'rgba(255,255,255,0.15)',
-              color: look ? C.deepBrown : C.white,
+              background: scrolled ? 'rgba(166,90,24,0.08)' : 'rgba(255,255,255,0.15)',
+              color: scrolled ? C.deepBrown : C.white,
             }}
           >
-            <Icon name={open ? 'close' : 'menu'} size={22} color={look ? C.deepBrown : C.white} sw={2}/>
+            <Icon name={open ? 'close' : 'menu'} size={22} color={scrolled ? C.deepBrown : C.white} sw={2}/>
           </button>
         </div>
       </nav>
@@ -972,175 +978,1068 @@ const Nav = ({ scrolled, activeSection, onNav, tweaks, solid }) => {
   );
 };
 
+// ─── Hero ─────────────────────────────────────────────────────────────────────
+const HERO_PHOTOS = {
+  IMG_8229:  'IMG_8229.jpg',
+  IMG_1272:  'IMG_1272.jpg',
+  IMG_3283:  'IMG_3283.jpg',
+  IMG_1414:  'IMG_1414.jpg',
+  IMG_7704:  'IMG_7704_retouched.jpg',
+};
 
-const ShopGifting = ({ tweaks }) => (
-  <section id="shop" data-screen-label="Shop & Gifting" style={{
-    background: C.softBeige, position: 'relative', overflow: 'hidden',
-  }}>
-    <BubbleBg opacity={0.05}/>
-    <div className="cb-section-pad" style={{ maxWidth: 1280, margin: '0 auto', padding: '72px 80px', position: 'relative', zIndex: 1 }}>
-      {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: 56, maxWidth: 640, marginLeft: 'auto', marginRight: 'auto' }}>
-        <SectionLabel>Shop & Gifting</SectionLabel>
-        <h2 className="cb-page-title" style={{
-          fontFamily: 'var(--font-display)', fontWeight: 400,
-          lineHeight: 1.15, letterSpacing: '-0.01em', marginBottom: 16,
-        }}>Take a little Ciao Bella home.</h2>
-        <CopperRule style={{ maxWidth: 400, margin: '0 auto 20px' }}/>
-        <p style={{ fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.7, color: C.warmTaupe }}>
-          Salon-grade products from R+Co and digital gift cards delivered instantly. Treat yourself, or someone you love.
-        </p>
+const Hero = ({ tweaks, onNav }) => {
+  const [imgIdx, setImgIdx] = React.useState(0);
+  const photos = Object.values(HERO_PHOTOS);
+  React.useEffect(() => {
+    const t = setInterval(() => setImgIdx(i => (i + 1) % photos.length), 8000);
+    return () => clearInterval(t);
+  }, []);
+
+  return (
+    <section id="hero" data-screen-label="Hero" className="cb-hero-section" style={{ position: 'relative', minHeight: '100dvh', overflow: 'hidden' }}>
+      {/* Photo layers */}
+      {photos.map((src, i) => (
+        <div key={src} style={{
+          position: 'absolute', inset: 0,
+          background: `url(${src}) center center / cover no-repeat`,
+          opacity: i === imgIdx ? 1 : 0,
+          transition: 'opacity 1.2s ease',
+        }}/>
+      ))}
+
+      {/* Gradient overlay */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: `linear-gradient(
+          to bottom,
+          rgba(59,31,16,0.35) 0%,
+          rgba(59,31,16,0.15) 40%,
+          rgba(59,31,16,0.6) 80%,
+          rgba(59,31,16,0.85) 100%
+        )`
+      }}/>
+
+      {/* Content */}
+      <div className="cb-hero-content" style={{
+        position: 'relative', zIndex: 2,
+        minHeight: '100dvh', display: 'flex', flexDirection: 'column',
+        justifyContent: 'flex-end', padding: '0 80px 80px',
+        maxWidth: 1280, margin: '0 auto', width: '100%',
+      }}>
+        <SectionLabel light>Gainesville, Florida</SectionLabel>
+        <h1 className="cb-page-title" style={{
+          fontWeight: 300,
+          fontSize: 'clamp(52px, 7vw, 96px)',
+          color: C.white,
+          lineHeight: 1.05,
+          letterSpacing: '-0.02em',
+          marginBottom: 8,
+          textShadow: '0 2px 20px rgba(59,31,16,0.38)',
+        }}>ciao bella salon</h1>
+        <p style={{
+          fontFamily: 'var(--font-display)',
+          fontWeight: 400,
+          fontSize: 'clamp(18px, 2.2vw, 28px)',
+          color: C.cream,
+          marginBottom: 40,
+          letterSpacing: '0.04em',
+          fontStyle: 'italic',
+        }}>{tweaks.heroTagline}</p>
+
+        <div className="cb-hero-ctas" style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+          <a href={LINKS.booking} target="_blank" rel="noopener"
+            style={{
+              fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 12,
+              letterSpacing: '0.15em', textTransform: 'uppercase',
+              background: tweaks.accentColor, color: C.white,
+              padding: '14px 32px', borderRadius: 999, textDecoration: 'none',
+              transition: 'background 200ms ease',
+              boxShadow: '0 4px 16px rgba(166,90,24,0.4)',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = C.chocolate}
+            onMouseLeave={e => e.currentTarget.style.background = tweaks.accentColor}
+          >{tweaks.ctaText}</a>
+          <a href="#about"
+            style={{
+              fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 12,
+              letterSpacing: '0.15em', textTransform: 'uppercase',
+              color: C.white, padding: '13px 30px', borderRadius: 999,
+              textDecoration: 'none', border: '1.5px solid rgba(255,255,255,0.5)',
+              transition: 'border-color 200ms ease, background 200ms ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = C.white; e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.5)'; e.currentTarget.style.background = 'transparent'; }}
+          >Learn More</a>
+        </div>
+
+        {/* Slide dots */}
+        <div style={{ display: 'flex', gap: 8, marginTop: 40 }}>
+          {photos.map((_, i) => (
+            <button type="button" key={i} aria-label={`Show hero photo ${i + 1}`} aria-pressed={i === imgIdx} onClick={() => setImgIdx(i)} style={{
+              width: i === imgIdx ? 24 : 8, height: 8, borderRadius: 999,
+              background: i === imgIdx ? C.cream : 'rgba(255,255,255,0.35)',
+              border: 'none', cursor: 'pointer', padding: 0,
+              transition: 'width 300ms ease, background 300ms ease',
+            }}></button>
+          ))}
+        </div>
       </div>
 
-      {/* Two-up cards */}
-      <div className="cb-grid-2-cards" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 32 }}>
-        {/* Gift Cards card */}
-        <a href={LINKS.giftCards} target="_blank" rel="noopener" className="cb-shop-card-gift" style={{
-          position: 'relative', overflow: 'hidden', borderRadius: 12,
-          minHeight: 420, textDecoration: 'none', display: 'block',
-          background: `linear-gradient(135deg, ${C.terracotta} 0%, ${C.chocolate} 100%)`,
-          boxShadow: '0 12px 40px rgba(107,46,15,0.25)',
-          transition: 'transform 300ms ease, box-shadow 300ms ease',
-        }}
-          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 18px 50px rgba(107,46,15,0.32)'; }}
-          onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 12px 40px rgba(107,46,15,0.25)'; }}
-        >
-          {/* Decorative pattern */}
-          <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.18 }} viewBox="0 0 600 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-            <circle cx="80" cy="80" r="140" fill={C.cream}/>
-            <circle cx="540" cy="300" r="160" fill={C.cream} opacity="0.6"/>
-            <circle cx="480" cy="60" r="50" fill="none" stroke={C.cream} strokeWidth="2"/>
-            <circle cx="120" cy="360" r="80" fill="none" stroke={C.cream} strokeWidth="2"/>
-          </svg>
+    </section>
+  );
+};
 
-          {/* Big gift card mock */}
-          <div className="cb-shop-card-mock" style={{
-            position: 'absolute', top: '50%', right: -40,
-            transform: 'translateY(-50%) rotate(-8deg)',
-            width: 260, height: 170, borderRadius: 12,
-            background: `linear-gradient(135deg, ${C.cream} 0%, #FFF7E0 100%)`,
-            boxShadow: '0 12px 30px rgba(59,31,16,0.22)',
-            padding: '20px 22px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+// ─── About ────────────────────────────────────────────────────────────────────
+const About = ({ tweaks }) => (
+  <section id="about" data-screen-label="About" style={{ background: C.softBeige, position: 'relative', overflow: 'hidden' }}>
+    <BubbleBg opacity={0.07} style={{ top: '-10%', height: '120%' }}/>
+    <div className="cb-section-pad" style={{ maxWidth: 1280, margin: '0 auto', padding: '100px 80px', position: 'relative', zIndex: 1 }}>
+      <div className="cb-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }}>
+        {/* Photo collage */}
+        <div className="cb-about-collage" style={{ position: 'relative', height: 560 }}>
+          {/* Primary portrait — dominant, anchored top-left */}
+          <div style={{
+            position: 'absolute', top: 0, left: 0, width: '72%', height: '86%',
+            borderRadius: 8, overflow: 'hidden',
+            boxShadow: '0 24px 60px -16px rgba(59,31,16,0.28)',
           }}>
-            <div>
-              <div style={{ fontFamily: 'var(--font-body)', fontSize: 9, fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: C.chocolate, marginBottom: 8 }}>Gift Card</div>
-              <div style={{ fontFamily: 'var(--font-display)', fontWeight: 300, fontSize: 30, color: C.burntCopper, lineHeight: 1, letterSpacing: '-0.01em' }}>ciao bella</div>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-              <div style={{ fontFamily: 'var(--font-body)', fontSize: 9, fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: C.warmTaupe }}>From $25</div>
-              <div style={{ display: 'flex', gap: 4 }}>
-                {[C.burntCopper, C.slateBlue, C.chocolate].map((c, i) => (
-                  <div key={i} style={{ width: 7, height: 7, borderRadius: '50%', background: c }}/>
-                ))}
-              </div>
-            </div>
+            <img src="IMG_7661.jpg" alt="Michele, owner and master stylist, giving a precision haircut at Ciao Bella Salon in Downtown Gainesville" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}/>
           </div>
-
-          {/* Content */}
-          <div className="cb-shop-card-content" style={{ position: 'relative', zIndex: 2, padding: '44px 44px 40px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', maxWidth: '60%' }}>
-            <div>
-              <div style={{
-                width: 48, height: 48, borderRadius: '50%',
-                background: 'rgba(248,226,182,0.18)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 24,
-              }}>
-                <Icon name="gift" size={22} color={C.cream}/>
-              </div>
-              <div style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(248,226,182,0.7)', marginBottom: 12 }}>Gift Cards</div>
-              <h3 style={{
-                fontFamily: 'var(--font-display)', fontWeight: 400, fontSize: 36,
-                color: C.white, lineHeight: 1.1, letterSpacing: '-0.01em', marginBottom: 14,
-              }}>Give the gift of <em style={{ color: C.cream }}>beautiful hair.</em></h3>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, lineHeight: 1.65, color: 'rgba(255,255,255,0.78)', marginBottom: 20 }}>
-                Digital gift cards delivered instantly by email - perfect for birthdays, graduations, or a "just because".
-              </p>
-            </div>
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: 10, alignSelf: 'flex-start',
-              fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 11,
-              letterSpacing: '0.15em', textTransform: 'uppercase',
-              background: C.cream, color: C.chocolate,
-              padding: '13px 24px', borderRadius: 999,
-              boxShadow: '0 4px 16px rgba(59,31,16,0.18)',
-            }}>Send a Gift Card <Icon name="arrow" size={14} color={C.chocolate}/></div>
-          </div>
-        </a>
-
-        {/* R+Co Shop card */}
-        <a href={LINKS.rcoShop} target="_blank" rel="noopener" className="cb-shop-card-rco-wrap" style={{
-          position: 'relative', overflow: 'hidden', borderRadius: 12,
-          minHeight: 420, textDecoration: 'none', display: 'block',
-          background: C.deepBrown,
-          boxShadow: '0 12px 40px rgba(59,31,16,0.25)',
-          transition: 'transform 300ms ease, box-shadow 300ms ease',
-        }}
-          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 18px 50px rgba(59,31,16,0.32)'; }}
-          onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 12px 40px rgba(59,31,16,0.25)'; }}
-        >
-          {/* Decorative bubble pattern */}
-          <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.12 }} viewBox="0 0 600 420" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-            <circle cx="500" cy="100" r="180" fill={C.burntCopper}/>
-            <circle cx="80" cy="380" r="120" fill={C.terracotta} opacity="0.7"/>
-            <circle cx="560" cy="380" r="60" fill="none" stroke={C.cream} strokeWidth="2"/>
-            <circle cx="50" cy="80" r="40" fill="none" stroke={C.cream} strokeWidth="2"/>
-          </svg>
-
-          {/* R+Co product image */}
-          <div className="cb-shop-card-rco-img" style={{
-            position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)',
-            width: '42%', height: '78%',
-            zIndex: 1, pointerEvents: 'none',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          {/* Secondary — smaller, overlaps bottom-right with a cream gutter that punches through the primary */}
+          <div style={{
+            position: 'absolute', bottom: 0, right: 0, width: '46%', height: '52%',
+            borderRadius: 8, overflow: 'hidden',
+            boxShadow: '0 16px 40px -12px rgba(59,31,16,0.22)',
+            outline: `8px solid ${C.softBeige}`,
           }}>
-            <img src="mq15yu30-rco-products.webp" alt="R+Co haircare products available at Ciao Bella Salon - authorized retailer in Downtown Gainesville, FL"
-              style={{
-                maxWidth: '100%', maxHeight: '100%', objectFit: 'contain',
-                filter: 'drop-shadow(0 18px 28px rgba(59,31,16,0.48))',
-              }}
-            />
+            <img src="IMG_7682.jpg" alt="Ciao Bella stylist applying Goldwell custom hair color at the Downtown Gainesville salon" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}/>
           </div>
+        </div>
 
-          {/* Dark gradient mask behind text */}
-          <div className="cb-shop-card-rco-mask" style={{
-            position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
-            background: `linear-gradient(90deg, ${C.deepBrown} 0%, ${C.deepBrown} 48%, rgba(59,31,16,0.85) 58%, rgba(59,31,16,0) 72%)`,
-          }}/>
+        {/* Text */}
+        <div>
+          <SectionLabel>About the Salon</SectionLabel>
+          <h2 style={{
+            fontFamily: 'var(--font-display)', fontWeight: 400,
+            fontSize: 'clamp(32px, 3.5vw, 52px)', color: C.deepBrown,
+            lineHeight: 1.15, marginBottom: 24, letterSpacing: '-0.01em',
+          }}>Expert care.<br/>Personal service.</h2>
+          <CopperRule style={{ marginBottom: 28 }}/>
+          <p style={{
+            fontFamily: 'var(--font-body)', fontWeight: 400,
+            fontSize: 15, lineHeight: 1.75, color: C.warmTaupe, marginBottom: 20,
+          }}>
+            Ciao Bella Salon is an upscale, family-owned hair salon located in Downtown Gainesville, proudly serving our community since <strong style={{ color: C.burntCopper }}>2002</strong>. We're a Goldwell Color Salon known for customized color, precision cutting, and thoughtful in-depth consultations.
+          </p>
+          <p style={{
+            fontFamily: 'var(--font-body)', fontWeight: 400,
+            fontSize: 15, lineHeight: 1.75, color: C.warmTaupe, marginBottom: 36,
+          }}>
+            We operate on à la carte pricing - you only pay for the services you receive - with a professional team of highly trained stylists and pro products from R+Co and Goldwell. Every visit is tailored to you.
+          </p>
 
-          {/* Content */}
-          <div className="cb-shop-card-rco-text" style={{ position: 'relative', zIndex: 2, padding: '44px 44px 40px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', maxWidth: '58%' }}>
-            <div>
-              <div style={{
-                width: 48, height: 48, borderRadius: '50%',
-                background: 'rgba(248,226,182,0.12)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 24,
-              }}>
-                <Icon name="shop" size={22} color={C.cream}/>
+          {[
+            { label: 'Established 2002', sub: 'Downtown Gainesville since day one' },
+            { label: 'Goldwell Color Salon', sub: 'Certified color specialists' },
+            { label: 'À la carte pricing', sub: 'Pay only for what you receive' },
+            { label: 'R+Co + Goldwell', sub: 'Pro products, in-salon & to take home' },
+          ].map(item => (
+            <div key={item.label} style={{
+              display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16,
+            }}>
+              <div style={{ width: 6, height: 6, borderRadius: '50%', background: tweaks.accentColor, flexShrink: 0 }}/>
+              <div>
+                <span style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 13, color: C.deepBrown }}>{item.label}</span>
+                <span style={{ fontFamily: 'var(--font-body)', fontSize: 13, color: C.warmTaupe }}> - {item.sub}</span>
               </div>
-              <div style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 11, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(248,226,182,0.7)', marginBottom: 12 }}>R+Co · Goldwell</div>
-              <h3 style={{
-                fontFamily: 'var(--font-display)', fontWeight: 400, fontSize: 32,
-                color: C.white, lineHeight: 1.15, letterSpacing: '-0.01em', marginBottom: 14,
-              }}>Shop the products <em style={{ color: C.cream }}>your stylist uses.</em></h3>
-              <p style={{ fontFamily: 'var(--font-body)', fontSize: 13.5, lineHeight: 1.65, color: 'rgba(255,255,255,0.72)', marginBottom: 20 }}>
-                The same salon-grade R+Co products we use in-chair - shampoos, conditioners, styling and treatments. Shop online or pick up at the salon.
-              </p>
             </div>
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: 10, alignSelf: 'flex-start',
+          ))}
+
+          <div style={{ marginTop: 40, display: 'flex', gap: 16 }}>
+            <a href="#contact" style={{
               fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 11,
               letterSpacing: '0.15em', textTransform: 'uppercase',
               background: tweaks.accentColor, color: C.white,
-              padding: '13px 24px', borderRadius: 999,
-              boxShadow: '0 4px 16px rgba(59,31,16,0.22)',
-            }}>Shop R+Co <Icon name="arrow" size={14} color={C.white}/></div>
+              padding: '13px 28px', borderRadius: 999, textDecoration: 'none',
+              transition: 'background 200ms ease',
+            }}
+              onMouseEnter={e => e.currentTarget.style.background = C.chocolate}
+              onMouseLeave={e => e.currentTarget.style.background = tweaks.accentColor}
+            >Get In Touch</a>
+            <a href={LINKS.instagram} target="_blank" rel="noopener" style={{
+              fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 11,
+              letterSpacing: '0.15em', textTransform: 'uppercase',
+              color: C.burntCopper, padding: '12px 26px', borderRadius: 999,
+              textDecoration: 'none', border: `1.5px solid ${C.burntCopper}`,
+              display: 'flex', alignItems: 'center', gap: 7,
+              transition: 'all 200ms ease',
+            }}
+              onMouseEnter={e => { e.currentTarget.style.background = C.burntCopper; e.currentTarget.style.color = C.white; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.burntCopper; }}
+            ><Icon name="instagram" size={14} color="currentColor"/> Follow Us</a>
           </div>
-        </a>
+        </div>
       </div>
     </div>
   </section>
 );
 
+// ─── Services ─────────────────────────────────────────────────────────────────
+const SERVICES = [
+  { icon: 'scissors', title: 'Precision Cutting',  desc: 'Cuts tailored to your face shape, hair texture, and lifestyle. Dry-cut finishing on request.' },
+  { icon: 'brush',    title: 'Color Specialists',  desc: 'Goldwell certified color, root to ends. Subtle enhancements through full transformations.' },
+  { icon: 'sparkle',  title: 'Blonding',           desc: 'Balayage, highlights, full color, and toning. Sun-kissed to platinum, dimensionally placed.' },
+  { icon: 'droplet',  title: 'Vivids',             desc: 'Fashion shades and bold color work. Honest consultations on lift, longevity, and upkeep.' },
+  { icon: 'wind',     title: 'Curly Cutting',      desc: 'Curly method trained. Cut dry, shaped to your pattern, finished without breaking the curl.' },
+  { icon: 'sparkle',  title: 'Corrective Color',   desc: 'Patient, multi-session restoration when color goes wrong. Always with a plan you understand.' },
+];
 
+const Services = ({ tweaks }) => {
+  const [active, setActive] = React.useState(0);
+  const cur = SERVICES[active];
+  return (
+    <section id="services" data-screen-label="Services" style={{ background: C.white, position: 'relative', overflow: 'hidden' }}>
+      <style>{`
+        .cb-svc-shell { display:grid; grid-template-columns:minmax(0,380px) 1fr; gap:56px; align-items:start; }
+        .cb-svc-list { border-top:1px solid ${C.softBeige}; }
+        .cb-svc-rowwrap { border-bottom:1px solid ${C.softBeige}; }
+        .cb-svc-row { width:100%; text-align:left; background:none; border:none; cursor:pointer; position:relative;
+          display:flex; align-items:center; gap:16px; padding:22px 10px; font-family:var(--font-body);
+          transition:background 200ms ease; }
+        .cb-svc-row:hover { background:#FBF6EE; }
+        .cb-svc-row[aria-selected="true"] { background:#FBF6EE; }
+        .cb-svc-row[aria-selected="true"]::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:${tweaks.accentColor}; }
+        .cb-svc-num { font-variant-numeric:tabular-nums; font-size:11px; font-weight:600; letter-spacing:.18em; color:${C.warmTaupe}; width:22px; flex-shrink:0; }
+        .cb-svc-ttl { font-family:var(--font-display); font-weight:500; font-size:21px; color:${C.deepBrown}; letter-spacing:-.005em; flex:1; line-height:1.2; transition:color 200ms ease; }
+        .cb-svc-row[aria-selected="true"] .cb-svc-ttl { color:${tweaks.accentColor}; }
+        .cb-svc-chev { flex-shrink:0; display:none; transition:transform 300ms ease; }
+        .cb-svc-inline { display:none; }
+        .cb-svc-panel-in { animation:cbFade 360ms ease; }
+        @keyframes cbFade { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:none } }
+        .cb-svc-mobilecta { display:none; }
+        @media (max-width:920px) {
+          .cb-svc-shell { grid-template-columns:1fr; gap:0; }
+          .cb-svc-panel { display:none; }
+          .cb-svc-chev { display:block; }
+          .cb-svc-row { padding:20px 10px; }
+          .cb-svc-inline { display:block; overflow:hidden; max-height:0; opacity:0; padding:0 10px 0 48px;
+            transition:max-height 380ms ease, opacity 300ms ease, padding 380ms ease; }
+          .cb-svc-inline.open { max-height:200px; opacity:1; padding:0 10px 20px 48px; }
+          .cb-svc-mobilecta { display:block; }
+        }
+      `}</style>
+      <div className="cb-section-pad" style={{ maxWidth: 1180, margin: '0 auto', padding: '100px 80px' }}>
+        <div style={{ textAlign: 'center', marginBottom: 60 }}>
+          <SectionLabel>What We Do</SectionLabel>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 400, fontSize: 'clamp(32px, 3.5vw, 52px)', color: C.deepBrown, lineHeight: 1.15, letterSpacing: '-0.01em', marginBottom: 16 }}>Our Services</h2>
+          <CopperRule style={{ maxWidth: 400, margin: '0 auto' }}/>
+        </div>
+
+        <div className="cb-svc-shell">
+          {/* Title list */}
+          <div className="cb-svc-list" role="tablist" aria-label="Services">
+            {SERVICES.map((svc, i) => {
+              const sel = active === i;
+              return (
+                <div className="cb-svc-rowwrap" key={svc.title}>
+                  <button className="cb-svc-row" role="tab" aria-selected={sel}
+                    aria-controls="cb-svc-panel" onClick={() => setActive(i)}>
+                    <span className="cb-svc-num">{String(i + 1).padStart(2, '0')}</span>
+                    <Icon name={svc.icon} size={20} color={sel ? tweaks.accentColor : C.deepBrown} sw={1.4}/>
+                    <span className="cb-svc-ttl">{svc.title}</span>
+                    <span className="cb-svc-chev" style={{ transform: sel ? 'rotate(90deg)' : 'rotate(0deg)' }}>
+                      <Icon name="chevronR" size={16} color={sel ? tweaks.accentColor : C.lightTaupe}/>
+                    </span>
+                  </button>
+                  <div className={`cb-svc-inline ${sel ? 'open' : ''}`}>
+                    <p style={{ fontFamily: 'var(--font-body)', fontSize: 14.5, lineHeight: 1.7, color: C.warmTaupe, margin: 0 }}>{svc.desc}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Detail panel (desktop) */}
+          <div className="cb-svc-panel" id="cb-svc-panel" role="tabpanel">
+            <div key={active} className="cb-svc-panel-in" style={{ padding: '6px 4px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
+                <span style={{ width: 54, height: 54, borderRadius: '50%', background: '#FBF6EE', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Icon name={cur.icon} size={25} color={tweaks.accentColor} sw={1.4}/>
+                </span>
+                <span style={{ fontFamily: 'var(--font-body)', fontVariantNumeric: 'tabular-nums', fontSize: 12, fontWeight: 600, letterSpacing: '.18em', color: C.warmTaupe }}>
+                  {String(active + 1).padStart(2, '0')} / {String(SERVICES.length).padStart(2, '0')}
+                </span>
+              </div>
+              <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 34, color: C.deepBrown, marginBottom: 18, lineHeight: 1.15, letterSpacing: '-0.01em' }}>{cur.title}</h3>
+              <p style={{ fontFamily: 'var(--font-body)', fontSize: 17, lineHeight: 1.75, color: C.warmTaupe, margin: '0 0 32px', maxWidth: '46ch' }}>{cur.desc}</p>
+              <a href={LINKS.booking} target="_blank" rel="noopener" style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 12, letterSpacing: '.15em', textTransform: 'uppercase', background: tweaks.accentColor, color: C.white, padding: '14px 32px', borderRadius: 999, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 10, boxShadow: '0 4px 16px rgba(166,90,24,0.28)' }}
+                onMouseEnter={e => e.currentTarget.style.background = C.chocolate}
+                onMouseLeave={e => e.currentTarget.style.background = tweaks.accentColor}
+              >Book this service <Icon name="arrow" size={16} color={C.white}/></a>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA (mobile) */}
+        <div className="cb-svc-mobilecta" style={{ textAlign: 'center', marginTop: 36 }}>
+          <a href={LINKS.booking} target="_blank" rel="noopener" style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase', background: tweaks.accentColor, color: C.white, padding: '14px 36px', borderRadius: 999, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 10, boxShadow: '0 4px 16px rgba(166,90,24,0.3)' }}>
+            {tweaks.ctaText} <Icon name="arrow" size={16} color={C.white}/>
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ─── Before / After signature moment ─────────────────────────────────────────
+// NOTE: Swap each pair's paths with true paired before→after photos from real
+// clients when available. Current pairs show tonal range from the existing
+// portfolio (not the same client). The label field describes the color story.
+const BEFORE_AFTER = [
+  {
+    label: 'Before → After',
+    before: { src: 'mq1cvq27-before01.jpg', alt: 'Before — warm brunette at Ciao Bella Salon' },
+    after:  { src: 'mq1cev8r-IMG_1414.jpg', alt: 'After — cool toned transformation at Ciao Bella Salon' },
+  },
+  {
+    label: 'Chocolate → Ash Blonde',
+    before: { src: 'mq1cruze-before02_03.jpg', alt: 'Before — glossy chocolate brunette at Ciao Bella Salon' },
+    after:  { src: 'IMG_7704_retouched.jpg', alt: 'After — cool ash blonde balayage with seamless root smudge at Ciao Bella Salon' },
+  },
+  {
+    label: 'Copper → Lived-In Blonde',
+    before: { src: 'mq1cqnlj-grok-image-3f7a6896-6474-4ff6-b753-90ccb0ef87ed.jpg', alt: 'Before — warm copper hair color at Ciao Bella Salon' },
+    after:  { src: 'mq1cz06p-assets_photos_IMG_3283.jpg', alt: 'After — vibrant transformation at Ciao Bella Salon' },
+  },
+];
+
+const BeforeAfter = () => {
+  const [pos, setPos] = React.useState(50);
+  const [idx, setIdx] = React.useState(0);
+  const ref = React.useRef(null);
+  const dragging = React.useRef(false);
+  const pair = BEFORE_AFTER[idx];
+  const isCollage = pair.isCollage;
+  const goTo = (i) => {
+    const next = ((i % BEFORE_AFTER.length) + BEFORE_AFTER.length) % BEFORE_AFTER.length;
+    setIdx(next);
+    setPos(50);
+  };
+  const prev = () => goTo(idx - 1);
+  const next = () => goTo(idx + 1);
+
+  const setFromClientX = (clientX) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const raw = ((clientX - rect.left) / rect.width) * 100;
+    const next = Math.max(0, Math.min(100, raw));
+    setPos(next);
+  };
+
+  const onPointerDown = (e) => {
+    dragging.current = true;
+    try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {}
+    setFromClientX(e.clientX);
+  };
+  const onPointerMove = (e) => {
+    if (!dragging.current) return;
+    setFromClientX(e.clientX);
+  };
+  const onPointerUp = (e) => {
+    dragging.current = false;
+    try { e.currentTarget.releasePointerCapture(e.pointerId); } catch (_) {}
+  };
+  const onKeyDown = (e) => {
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); setPos(p => Math.max(0, p - 4)); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); setPos(p => Math.min(100, p + 4)); }
+    if (e.key === 'Home')       { e.preventDefault(); setPos(0); }
+    if (e.key === 'End')        { e.preventDefault(); setPos(100); }
+  };
+
+  return (
+    <div className="cb-ba-wrap">
+      {isCollage ? (
+        <figure className="cb-ba-collage">
+          <img className="cb-ba-collage-img" src={pair.src} alt={pair.alt} />
+          <figcaption style={{ position: 'absolute', left: -9999, top: 'auto' }}>
+            {pair.label}
+          </figcaption>
+        </figure>
+      ) : (
+      <figure className="cb-ba"
+        ref={ref}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+        style={{ '--pos': pos + '%' }}
+      >
+        <img className="cb-ba-img" src={pair.before.src} alt={pair.before.alt} key={'b' + idx}/>
+        <img className="cb-ba-img cb-ba-after" src={pair.after.src} alt={pair.after.alt} key={'a' + idx}/>
+        <span className="cb-ba-label cb-ba-label-before" aria-hidden="true">Before</span>
+        <span className="cb-ba-label cb-ba-label-after" aria-hidden="true">After</span>
+        <div className="cb-ba-divider" aria-hidden="true"/>
+        <div className="cb-ba-handle"
+          role="slider"
+          tabIndex={0}
+          aria-label={'Reveal before and after — ' + pair.label}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={Math.round(pos)}
+          aria-valuetext={Math.round(pos) + ' percent after revealed'}
+          onKeyDown={onKeyDown}
+        >‹›</div>
+        <figcaption style={{ position: 'absolute', left: -9999, top: 'auto' }}>
+          Drag the handle to compare before and after of a Ciao Bella color transformation: {pair.label}.
+        </figcaption>
+      </figure>
+      )}
+      <div className="cb-ba-nav" role="group" aria-label="Browse transformations">
+        <button type="button" className="cb-ba-arrow" onClick={prev} aria-label="Previous transformation">‹</button>
+        <div className="cb-ba-meta" aria-live="polite">
+          <span className="cb-ba-count">{String(idx + 1).padStart(2, '0')} / {String(BEFORE_AFTER.length).padStart(2, '0')}</span>
+          <span className="cb-ba-pair-label">{pair.label}</span>
+        </div>
+        <button type="button" className="cb-ba-arrow" onClick={next} aria-label="Next transformation">›</button>
+        <div className="cb-ba-dots" role="tablist" aria-label="Choose transformation">
+          {BEFORE_AFTER.map((p, i) => (
+            <button key={i} type="button" role="tab"
+              className={'cb-ba-dot' + (i === idx ? ' is-active' : '')}
+              aria-selected={i === idx}
+              aria-label={'Transformation ' + (i + 1) + ' — ' + p.label}
+              onClick={() => goTo(i)}/>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ─── Gallery ──────────────────────────────────────────────────────────────────
+const GALLERY = [
+  { src: 'IMG_8229.jpg',  span: 'tall',   alt: 'Honey blonde balayage with loose waves on long hair by Ciao Bella Salon in Downtown Gainesville' },
+  { src: 'IMG_1272.jpg',  span: 'wide',   alt: 'Vivid copper red custom color on mid-length hair by Ciao Bella Salon, Gainesville FL' },
+  { src: 'IMG_3283.jpg',  span: 'normal', alt: 'Warm copper hair color and gloss finish by Ciao Bella Salon' },
+  { src: 'IMG_1414.jpg',  span: 'normal', alt: 'Rich brunette with face-framing layers and curtain bangs by Ciao Bella Salon' },
+  { src: 'IMG_7704_retouched.jpg',  span: 'tall',   alt: 'Cool ash blonde balayage with seamless root smudge by Ciao Bella Salon, Gainesville' },
+  { src: 'IMG_8648.jpg',  span: 'normal', alt: 'Dimensional brunette balayage with caramel highlights by Ciao Bella Salon' },
+  { src: 'IMG_6207.jpg',  span: 'wide',   alt: 'Lived-in blonde highlights and soft beach waves by Ciao Bella Salon, Downtown Gainesville' },
+  { src: 'mq1dq2dx-ChatGPT-Image-Jun-5_-2026_-04_27_41-PM.png', span: 'normal', alt: 'Salon interior and styling session by Ciao Bella Salon, Downtown Gainesville' },
+  { src: 'IMG_4764.jpg', span: 'normal', alt: 'Soft brunette with caramel highlights and long layers by Ciao Bella Salon, Downtown Gainesville' },
+  { src: 'IMG_7645.jpg', span: 'normal', alt: 'Glossy chocolate brunette color and blowout by Ciao Bella Salon' },
+  { src: 'mq1dx6m3-ChatGPT-Image-Jun-5_-2026_-03_50_58-PM.png', span: 'normal', alt: 'Rich brunette balayage transformation by Ciao Bella Salon, Downtown Gainesville' },
+  { src: 'mq2o099m-image.png', span: 'normal', alt: 'Blonde balayage with soft waves on mid-length hair by Ciao Bella Salon, Gainesville' },
+];
+
+const Gallery = ({ tweaks }) => {
+  const [lightbox, setLightbox] = React.useState(null);
+  React.useEffect(() => {
+    if (lightbox === null) return;
+    const previousOverflow = document.body.style.overflow;
+    const onKey = (event) => {
+      if (event.key === 'Escape') setLightbox(null);
+      if (event.key === 'ArrowLeft') setLightbox(l => (l - 1 + GALLERY.length) % GALLERY.length);
+      if (event.key === 'ArrowRight') setLightbox(l => (l + 1) % GALLERY.length);
+    };
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [lightbox]);
+
+  return (
+    <section id="ourwork" data-screen-label="Our Work" style={{ background: C.deepBrown, position: 'relative', overflow: 'hidden', padding: '100px 0' }}>
+      <BubbleBg opacity={0.06} flip/>
+      <div className="cb-section-pad" style={{ maxWidth: 1280, margin: '0 auto', padding: '0 80px', position: 'relative', zIndex: 1 }}>
+        <div style={{ textAlign: 'center', marginBottom: 64 }}>
+          <SectionLabel light>Portfolio</SectionLabel>
+          <h2 style={{
+            fontFamily: 'var(--font-display)', fontWeight: 300,
+            fontSize: 'clamp(32px, 3.5vw, 52px)', color: C.white,
+            lineHeight: 1.15, letterSpacing: '-0.01em', marginBottom: 16,
+          }}>Our Work</h2>
+          <div style={{ width: 48, height: 1, background: 'rgba(187,169,153,0.4)', margin: '0 auto' }}/>
+        </div>
+
+        {/* Signature moment — draggable before/after */}
+        <div style={{ textAlign: 'center', marginBottom: 18 }}>
+          <span style={{
+            fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 10,
+            letterSpacing: '0.22em', textTransform: 'uppercase',
+            color: 'rgba(248,226,182,0.7)',
+          }}>The Transformation</span>
+        </div>
+        <BeforeAfter/>
+        <p style={{
+          fontFamily: 'var(--font-body)', fontWeight: 400, fontSize: 13,
+          color: 'rgba(248,226,182,0.6)', textAlign: 'center',
+          marginTop: 0, marginBottom: 56, letterSpacing: '0.02em',
+        }}>Drag to compare, or use the arrows to browse. Every color is custom-mixed for your tone, lifestyle, and grow-out.</p>
+
+        {/* Masonry grid */}
+        <div className="cb-gallery-grid" style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, 1fr)',
+          gridAutoRows: '260px',
+          gridAutoFlow: 'dense',
+          gap: 12,
+        }}>
+          {GALLERY.map((img, i) => {
+            const spans = {
+              tall:   { gridRow: 'span 2' },
+              wide:   { gridColumn: 'span 2' },
+              normal: {},
+            };
+            return (
+              <button type="button" key={i} className="cb-gallery-tile" data-span={img.span}
+                aria-label={`Open portfolio image ${i + 1}: ${img.alt}`}
+                onClick={() => setLightbox(i)}
+                style={{
+                borderRadius: 6, overflow: 'hidden', cursor: 'zoom-in',
+                position: 'relative', ...spans[img.span],
+              }}>
+                <img src={img.src} alt={img.alt} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 500ms ease', filter: 'none' }}
+                  onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
+                  onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                />
+                <div style={{
+                  position: 'absolute', inset: 0,
+                  background: 'rgba(59,31,16,0)',
+                  transition: 'background 300ms ease',
+                }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(59,31,16,0.2)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'rgba(59,31,16,0)'}
+                />
+              </button>
+            );
+          })}
+        </div>
+
+        <div style={{ textAlign: 'center', marginTop: 48 }}>
+          <a href={LINKS.instagram} target="_blank" rel="noopener" style={{
+            fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 11,
+            letterSpacing: '0.15em', textTransform: 'uppercase',
+            color: C.cream, padding: '12px 28px', borderRadius: 999,
+            textDecoration: 'none', border: `1.5px solid rgba(248,226,182,0.4)`,
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            transition: 'all 200ms ease',
+          }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = C.cream; e.currentTarget.style.background = 'rgba(248,226,182,0.1)'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(248,226,182,0.4)'; e.currentTarget.style.background = 'transparent'; }}
+          ><Icon name="instagram" size={14} color={C.cream}/> View More on Instagram</a>
+        </div>
+      </div>
+
+      {/* Lightbox */}
+      {lightbox !== null && (
+        <div role="dialog" aria-modal="true" aria-label="Expanded portfolio image" onClick={() => setLightbox(null)} style={{
+          position: 'fixed', inset: 0, background: 'rgba(26,16,8,0.95)',
+          zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          cursor: 'zoom-out',
+        }}>
+          <button aria-label="Previous portfolio image" className="cb-lightbox-btn" onClick={e => { e.stopPropagation(); setLightbox(l => (l - 1 + GALLERY.length) % GALLERY.length); }}
+            style={{ position: 'absolute', left: 32, cursor: 'pointer' }}>
+            <span style={{ display: 'inline-flex', transform: 'rotate(180deg)' }}><Icon name="chevronR" size={30} color={C.white} sw={1.5}/></span>
+          </button>
+          <img src={GALLERY[lightbox].src} alt={GALLERY[lightbox].alt}
+            style={{ maxWidth: '80vw', maxHeight: '85vh', objectFit: 'contain', borderRadius: 8 }}
+            onClick={e => e.stopPropagation()}
+          />
+          <button aria-label="Next portfolio image" className="cb-lightbox-btn" onClick={e => { e.stopPropagation(); setLightbox(l => (l + 1) % GALLERY.length); }}
+            style={{ position: 'absolute', right: 32, cursor: 'pointer' }}>
+            <Icon name="chevronR" size={30} color={C.white} sw={1.5}/>
+          </button>
+          <button aria-label="Close portfolio image" className="cb-lightbox-btn" onClick={() => setLightbox(null)}
+            style={{ position: 'absolute', top: 24, right: 24, cursor: 'pointer' }}>
+            <Icon name="close" size={24} color={C.white} sw={1.5}/>
+          </button>
+        </div>
+      )}
+    </section>
+  );
+};
+
+// ─── Google Reviews ───────────────────────────────────────────────────────────
+const GoogleReviews = () => {
+  return (
+  <section id="reviews" data-screen-label="Google Reviews" style={{ background: C.softBeige, position: 'relative', overflow: 'hidden' }}>
+    <BubbleBg opacity={0.035} flip/>
+    <div className="cb-section-pad" style={{ maxWidth: 1180, margin: '0 auto', padding: '72px 80px', position: 'relative', zIndex: 1 }}>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '0.8fr 1.2fr',
+        gap: 44,
+        alignItems: 'center',
+      }} className="cb-grid-2">
+        <div>
+          <h2 className="cb-section-heading" style={{
+            fontFamily: 'var(--font-display)', fontWeight: 400,
+            fontSize: 'clamp(34px, 4vw, 56px)', color: C.deepBrown,
+            lineHeight: 1.05, letterSpacing: '-0.02em', marginBottom: 18,
+          }}>What Our Guests Say</h2>
+          <p style={{
+            fontFamily: 'var(--font-body)', fontSize: 15, lineHeight: 1.8,
+            color: C.warmTaupe, maxWidth: 420, marginBottom: 24,
+          }}>
+            Real guest feedback from our Gainesville salon community, pulled directly from Google.
+          </p>
+          <a href={LINKS.googleReviews} target="_blank" rel="noopener" style={{
+            fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 11,
+            letterSpacing: '0.15em', textTransform: 'uppercase',
+            color: C.deepBrown, textDecoration: 'none',
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            borderBottom: `1px solid ${C.burntCopper}`, paddingBottom: 5,
+          }}>
+            Read all Google reviews <Icon name="arrow" size={14} color={C.burntCopper}/>
+          </a>
+        </div>
+
+        <div style={{
+          background: C.white,
+          border: '1px solid rgba(107,46,15,0.08)',
+          borderRadius: 14,
+          boxShadow: '0 18px 48px rgba(59,31,16,0.1)',
+        }}>
+          <div className="elfsight-app-67e65414-51ea-4d5e-b183-0c29184a5d4b" data-elfsight-app-lazy></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  );
+};
+
+// ─── Team ─────────────────────────────────────────────────────────────────────
+const TEAM = [
+  {
+    name: 'Michele Anzivino',
+    role: 'Master Stylist & Owner',
+    instagram: '@mick_ciaobellasalon',
+    igUrl: LINKS.igMichele,
+    photo: 'michele.png',
+    objectPosition: 'center 30%',
+    creds: ['Vidal Sassoon Trained','Pixie Expert','Blonding Specialist','Curly Cutting Trained'],
+    desc: 'With decades of mastery and Vidal Sassoon training, Michele brings precision and artistry to every appointment. Owner of Ciao Bella since 2002.',
+  },
+  {
+    name: 'Isabella',
+    role: 'Stylist',
+    instagram: '@_seibella_beauty',
+    igUrl: LINKS.igIsabella,
+    photo: 'isabella.jpg',
+        objectPosition: 'center 45%',
+    creds: ['Color Specialist','Cuts & Style'],
+    desc: 'Isabella brings a modern eye and steady hand to color work, specializing in dimensional blonding and lived-in looks.',
+  },
+  {
+    name: 'Anaya',
+    role: 'Stylist',
+    instagram: '@raes.rare.hair',
+    igUrl: LINKS.igAnaya,
+    photo: 'anaya.jpeg',
+    objectPosition: 'center 20%',
+    creds: ['Vivids Artist','Fashion Color','Balayage'],
+    desc: 'Anaya is our vivids and fashion color specialist, turning bold visions into stunning reality.',
+  },
+];
+
+const Team = ({ tweaks }) => {
+  const [hovered, setHovered] = React.useState(null);
+  return (
+    <section id="team" data-screen-label="Team" style={{ background: C.softBeige, position: 'relative', overflow: 'hidden' }}>
+      <BubbleBg opacity={0.06}/>
+      <div className="cb-section-pad" style={{ maxWidth: 1280, margin: '0 auto', padding: '100px 80px', position: 'relative', zIndex: 1 }}>
+        <div style={{ textAlign: 'center', marginBottom: 64 }}>
+          <SectionLabel>The Artists</SectionLabel>
+          <h2 style={{
+            fontFamily: 'var(--font-display)', fontWeight: 400,
+            fontSize: 'clamp(32px, 3.5vw, 52px)', color: C.deepBrown,
+            lineHeight: 1.15, letterSpacing: '-0.01em', marginBottom: 16,
+          }}>Meet the Team</h2>
+          <CopperRule style={{ maxWidth: 400, margin: '0 auto' }}/>
+        </div>
+
+        <div className="cb-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 32, maxWidth: 1100, margin: '0 auto' }}>
+          {TEAM.map((member, i) => (
+            <div key={member.name}
+              onMouseEnter={() => setHovered(i)}
+              onMouseLeave={() => setHovered(null)}
+              style={{
+                cursor: 'default',
+                borderRadius: 8, overflow: 'hidden',
+                background: C.white,
+                boxShadow: hovered === i ? '0 12px 36px rgba(166,90,24,0.2)' : '0 2px 8px rgba(59,31,16,0.07)',
+                transition: 'box-shadow 300ms ease, transform 300ms ease',
+                transform: hovered === i ? 'translateY(-4px)' : 'none',
+              }}
+            >
+              <div className="cb-team-photo" style={{ height: 360, overflow: 'hidden', position: 'relative' }}>
+                <img src={member.photo} alt={member.name}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: member.objectPosition || 'center top',
+                    transition: 'transform 500ms ease',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
+                  onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                />
+                {hovered === i && (
+                  <div style={{
+                    position: 'absolute', bottom: 0, left: 0, right: 0,
+                    background: `linear-gradient(transparent, ${tweaks.accentColor})`,
+                    height: 80,
+                  }}/>
+                )}
+              </div>
+              <div style={{ padding: '20px 22px 22px' }}>
+                <div style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 18, color: C.deepBrown, marginBottom: 3 }}>{member.name}</div>
+                <div style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: tweaks.accentColor, marginBottom: 12 }}>{member.role}</div>
+
+                {hovered === i && (
+                  <p style={{ fontFamily: 'var(--font-body)', fontSize: 12, lineHeight: 1.65, color: C.warmTaupe, marginBottom: 14 }}>{member.desc}</p>
+                )}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 14 }}>
+                  {member.creds.map(c => (
+                    <span key={c} style={{
+                      fontFamily: 'var(--font-body)', fontSize: 9, fontWeight: 700,
+                      letterSpacing: '0.1em', textTransform: 'uppercase',
+                      background: hovered === i ? tweaks.accentColor : C.softBeige,
+                      color: hovered === i ? C.white : C.warmTaupe,
+                      padding: '4px 9px', borderRadius: 999,
+                      transition: 'background 200ms ease, color 200ms ease',
+                    }}>{c}</span>
+                  ))}
+                </div>
+
+                <a href={member.igUrl} target="_blank" rel="noopener" style={{
+                  display: 'flex', alignItems: 'center', gap: 6,
+                  fontFamily: 'var(--font-body)', fontSize: 11, fontWeight: 600,
+                  color: C.warmTaupe, textDecoration: 'none',
+                  transition: 'color 200ms ease',
+                }}
+                  onMouseEnter={e => e.currentTarget.style.color = tweaks.accentColor}
+                  onMouseLeave={e => e.currentTarget.style.color = C.warmTaupe}
+                >
+                  <Icon name="instagram" size={13} color="currentColor"/>
+                  {member.instagram}
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ─── Info Bar ─────────────────────────────────────────────────────────────────
+const InfoBar = ({ tweaks }) => {
+  const hours = [
+    { day: 'Tuesday', time: '10am - 6pm' },
+    { day: 'Wednesday', time: '10am - 8pm' },
+    { day: 'Thursday', time: '10am - 8pm' },
+    { day: 'Friday', time: '10am - 8pm' },
+    { day: 'Saturday', time: '10am - 6pm' },
+    { day: 'Sunday', time: 'Closed' },
+    { day: 'Monday', time: 'Closed' },
+  ];
+  const today = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][new Date().getDay()];
+
+  return (
+    <div style={{ background: tweaks.accentColor, position: 'relative', overflow: 'hidden' }}>
+      <div className="cb-section-pad" style={{ maxWidth: 1280, margin: '0 auto', padding: '56px 80px', position: 'relative', zIndex: 1 }}>
+        <div className="cb-grid-infobar" style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr 1fr', gap: 60, alignItems: 'start' }}>
+
+          {/* Contact */}
+          <div>
+            <div style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(248,226,182,0.65)', marginBottom: 20 }}>Contact</div>
+            {[
+              { icon: 'phone', text: ADDR.phone, href: LINKS.phone },
+              { icon: 'pin', text: '235 S. Main St, Suite 102', href: LINKS.directions, target: '_blank' },
+              { icon: 'pin', text: 'Gainesville, FL 32601', href: LINKS.directions, target: '_blank' },
+              { icon: 'instagram', text: '@ciaobellahairsalon', href: LINKS.instagram, target: '_blank' },
+            ].map(item => (
+              <a key={item.text} href={item.href} target={item.target} rel="noopener"
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 10,
+                  fontFamily: 'var(--font-body)', fontSize: 14, color: C.white,
+                  textDecoration: 'none', marginBottom: 12, opacity: 0.9,
+                  transition: 'opacity 200ms ease',
+                }}
+                onMouseEnter={e => e.currentTarget.style.opacity = '1'}
+                onMouseLeave={e => e.currentTarget.style.opacity = '0.9'}
+              >
+                <Icon name={item.icon} size={16} color="rgba(248,226,182,0.7)"/>
+                {item.text}
+              </a>
+            ))}
+          </div>
+
+          {/* Hours */}
+          <div>
+            <div style={{ fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 10, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(248,226,182,0.65)', marginBottom: 20 }}>Hours</div>
+            {hours.map(h => {
+              const isToday = h.day.includes(today);
+              return (
+                <div key={h.day} style={{
+                  display: 'flex', justifyContent: 'space-between',
+                  fontFamily: 'var(--font-body)', fontSize: 13, marginBottom: 8,
+                  color: isToday ? C.cream : 'rgba(255,255,255,0.75)',
+                  fontWeight: isToday ? 700 : 400,
+                }}>
+                  <span>{h.day}</span>
+                  <span>{h.time}</span>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Book */}
+          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', gap: 16 }}>
+            <div style={{ fontFamily: 'var(--font-display)', fontWeight: 300, fontSize: 'clamp(24px, 2vw, 36px)', color: C.white, lineHeight: 1.2, letterSpacing: '-0.01em' }}>
+              Ready to<br/><em>transform</em>?
+            </div>
+            <a href={LINKS.booking} target="_blank" rel="noopener" style={{
+              fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 11,
+              letterSpacing: '0.15em', textTransform: 'uppercase',
+              background: C.white, color: tweaks.accentColor,
+              padding: '13px 28px', borderRadius: 999, textDecoration: 'none',
+              transition: 'all 200ms ease',
+              boxShadow: '0 4px 16px rgba(59,31,16,0.18)',
+            }}
+              onMouseEnter={e => { e.currentTarget.style.background = C.cream; }}
+              onMouseLeave={e => { e.currentTarget.style.background = C.white; }}
+            >{tweaks.ctaText}</a>
+            <div style={{ fontFamily: 'var(--font-body)', fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>
+              Book online - instant confirmation
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ─── Contact ──────────────────────────────────────────────────────────────────
+const Contact = ({ tweaks }) => {
+  const [form, setForm] = React.useState({ name: '', phone: '', message: '' });
+  const [status, setStatus] = React.useState('idle');
+  const [errors, setErrors] = React.useState({});
+
+  const updateField = (key, value) => {
+    setForm(f => ({ ...f, [key]: value }));
+    setErrors(current => {
+      if (!current[key]) return current;
+      const next = { ...current };
+      delete next[key];
+      return next;
+    });
+    if (status === 'error') setStatus('idle');
+  };
+
+  const validateForm = () => {
+    const next = {};
+    const digits = form.phone.replace(/\D/g, '');
+    if (!form.name.trim()) next.name = 'Please enter your first name.';
+    if (!digits) next.phone = 'Please enter your phone number.';
+    else if (digits.length < 10) next.phone = 'Please enter a 10-digit phone number.';
+    if (!form.message.trim()) next.message = 'Tell us a little about what you need.';
+    return next;
+  };
+
+  const handleSubmit = async e => {
+    e.preventDefault();
+    const nextErrors = validateForm();
+    if (Object.keys(nextErrors).length) {
+      setErrors(nextErrors);
+      setStatus('error');
+      return;
+    }
+    setStatus('sending');
+    const formData = new FormData();
+    formData.append('Name', form.name);
+    formData.append('Phone', form.phone);
+    formData.append('Message', form.message);
+    formData.append('_subject', `Ciao Bella website inquiry from ${form.name}`);
+    formData.append('_replyto', form.phone);
+    try {
+      const res = await fetch('https://formspree.io/f/xrbeynqk', {
+        method: 'POST', body: formData, headers: { 'Accept': 'application/json' },
+      });
+      if (res.ok) {
+        setForm({ name: '', phone: '', message: '' });
+        setErrors({});
+        setStatus('sent');
+        window.setTimeout(() => setStatus('idle'), 5200);
+      } else {
+        setStatus('error');
+      }
+    } catch (_) {
+      setStatus('error');
+    }
+  };
+
+  return (
+    <section id="contact" data-screen-label="Contact" style={{ background: C.white, position: 'relative', overflow: 'hidden' }}>
+      <BubbleBg opacity={0.05} flip/>
+      <div className="cb-section-pad" style={{ maxWidth: 1280, margin: '0 auto', padding: '100px 80px', position: 'relative', zIndex: 1 }}>
+          <div className="cb-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }}>
+
+          {/* Left */}
+          <div>
+            <h2 style={{
+              fontFamily: 'var(--font-display)', fontWeight: 400,
+              fontSize: 'clamp(32px, 3.5vw, 52px)', color: C.deepBrown,
+              lineHeight: 1.15, letterSpacing: '-0.01em', marginBottom: 20,
+            }}>Let's talk<br/>about your hair.</h2>
+            <CopperRule style={{ marginBottom: 28 }}/>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: 14, lineHeight: 1.75, color: C.warmTaupe, marginBottom: 36 }}>
+              Ready for a fresh look? Have questions about our services? We'd love to hear from you. Send us a message or call us directly.
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+              {[
+                { icon: 'phone', label: 'Phone', value: ADDR.phone, href: LINKS.phone },
+                { icon: 'pin', label: 'Address', value: <span><span>{ADDR.line1}</span><br/><span>{ADDR.line2}</span></span>, href: LINKS.directions },
+                { icon: 'instagram', label: 'Instagram', value: '@ciaobellahairsalon', href: LINKS.instagram },
+              ].map(item => (
+                <a key={item.label} href={item.href} target={typeof item.href === 'string' && item.href.startsWith('http') ? '_blank' : undefined} rel="noopener"
+                  style={{ display: 'flex', alignItems: 'center', gap: 16, textDecoration: 'none', color: 'inherit' }}>
+                  <div style={{
+                    width: 44, height: 44, borderRadius: '50%',
+                    background: C.softBeige, flexShrink: 0,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    <Icon name={item.icon} size={18} color={tweaks.accentColor}/>
+                  </div>
+                  <div>
+                    <div style={{ fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 10, letterSpacing: '0.15em', textTransform: 'uppercase', color: C.lightTaupe }}>{item.label}</div>
+                    <div style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: C.deepBrown, fontWeight: 500 }}>{item.value}</div>
+                  </div>
+                </a>
+              ))}
+            </div>
+
+            {/* Map embed — people have trouble finding us tucked away */}
+            <div style={{
+              marginTop: 32, borderRadius: 12, overflow: 'hidden',
+              boxShadow: '0 4px 20px rgba(59,31,16,0.09)',
+              border: `1px solid ${C.softBeige}`,
+            }}>
+              <iframe
+                title="Ciao Bella Salon location map"
+                 src="https://www.openstreetmap.org/export/embed.html?bbox=-82.3252,29.6482,-82.3234,29.65&amp;layer=mapnik&amp;marker=29.64907,-82.32429"
+                width="100%" height="220" style={{ display: 'block', border: 0 }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          </div>
+
+          {/* Form */}
+          <div className="cb-form-card" style={{ background: C.softBeige, borderRadius: 12, padding: '44px 40px', boxShadow: '0 4px 20px rgba(59,31,16,0.07)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            {status === 'sent' ? (
+              <div role="status" aria-live="polite" style={{ textAlign: 'center', padding: '40px 0' }}>
+                <div style={{
+                  width: 64, height: 64, borderRadius: '50%',
+                  background: tweaks.accentColor,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  margin: '0 auto 20px',
+                }}>
+                  <Icon name="check" size={28} color={C.white} sw={2}/>
+                </div>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: 24, color: C.deepBrown, marginBottom: 8 }}>Message sent!</div>
+                <div style={{ fontFamily: 'var(--font-body)', fontSize: 14, color: C.warmTaupe }}>We'll be in touch soon.</div>
+              </div>
+            ) : (
+              <form noValidate onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+                <div style={{ fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 22, color: C.deepBrown, marginBottom: 4 }}>Send a Message</div>
+                {status === 'error' && (
+                  <div className="cb-form-alert" role="alert">Please fix the highlighted fields before sending.</div>
+                )}
+                {[
+                  { key: 'name', label: 'First Name', placeholder: 'Your name', type: 'text', autoComplete: 'given-name' },
+                  { key: 'phone', label: 'Phone Number', placeholder: '(352) 379-9200', type: 'tel', autoComplete: 'tel' },
+                ].map(field => {
+                  const id = `contact-${field.key}`;
+                  const errorId = `${id}-error`;
+                  const hasError = Boolean(errors[field.key]);
+                  return (
+                  <div key={field.key}>
+                    <label htmlFor={id} style={{ fontFamily: 'var(--font-body)', fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.warmTaupe, display: 'block', marginBottom: 6 }}>{field.label}</label>
+                    <input
+                      id={id}
+                      name={field.key}
+                      type={field.type}
+                      placeholder={field.placeholder}
+                      autoComplete={field.autoComplete}
+                      required
+                      aria-invalid={hasError}
+                      aria-describedby={hasError ? errorId : undefined}
+                      value={form[field.key]}
+                      onChange={e => updateField(field.key, e.target.value)}
+                      style={{
+                        width: '100%', minHeight: 44, padding: '12px 16px',
+                        border: `1px solid ${hasError ? C.terracotta : C.lightTaupe}`, borderRadius: 4,
+                        fontFamily: 'var(--font-body)', fontSize: 14, color: C.deepBrown,
+                        background: C.white,
+                        transition: 'border-color 200ms ease, box-shadow 200ms ease',
+                        boxShadow: hasError ? '0 0 0 3px rgba(151,62,20,0.12)' : 'none',
+                      }}
+                      onFocus={e => e.target.style.borderColor = tweaks.accentColor}
+                      onBlur={e => e.target.style.borderColor = hasError ? C.terracotta : C.lightTaupe}
+                    />
+                    {hasError && <div id={errorId} className="cb-field-error" role="alert">{errors[field.key]}</div>}
+                  </div>
+                  );
+                })}
+                <div>
+                  <label htmlFor="contact-message" style={{ fontFamily: 'var(--font-body)', fontSize: 11, fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.warmTaupe, display: 'block', marginBottom: 6 }}>Message</label>
+                  <textarea
+                    id="contact-message"
+                    name="message"
+                    placeholder="How can we help you?"
+                    rows={4}
+                    required
+                    aria-invalid={Boolean(errors.message)}
+                    aria-describedby={errors.message ? 'contact-message-error' : undefined}
+                    value={form.message}
+                    onChange={e => updateField('message', e.target.value)}
+                    style={{
+                      width: '100%', minHeight: 132, padding: '12px 16px',
+                      border: `1px solid ${errors.message ? C.terracotta : C.lightTaupe}`, borderRadius: 4,
+                      fontFamily: 'var(--font-body)', fontSize: 14, color: C.deepBrown,
+                      background: C.white, resize: 'vertical',
+                      transition: 'border-color 200ms ease, box-shadow 200ms ease',
+                      boxShadow: errors.message ? '0 0 0 3px rgba(151,62,20,0.12)' : 'none',
+                    }}
+                    onFocus={e => e.target.style.borderColor = tweaks.accentColor}
+                    onBlur={e => e.target.style.borderColor = errors.message ? C.terracotta : C.lightTaupe}
+                  />
+                  {errors.message && <div id="contact-message-error" className="cb-field-error" role="alert">{errors.message}</div>}
+                </div>
+                <button type="submit" disabled={status === 'sending'} aria-live="polite" style={{
+                  fontFamily: 'var(--font-body)', fontWeight: 700, fontSize: 12,
+                  letterSpacing: '0.15em', textTransform: 'uppercase',
+                  background: status === 'sending' ? C.warmTaupe : tweaks.accentColor, color: C.white,
+                  padding: '14px 28px', borderRadius: 999, border: 'none', cursor: status === 'sending' ? 'not-allowed' : 'pointer',
+                  transition: 'background 200ms ease, transform 120ms ease',
+                  minHeight: 46,
+                  opacity: status === 'sending' ? 0.82 : 1,
+                }}
+                  onMouseEnter={e => { if (status !== 'sending') e.currentTarget.style.background = C.chocolate; }}
+                  onMouseLeave={e => { if (status !== 'sending') e.currentTarget.style.background = tweaks.accentColor; }}
+                >{status === 'sending' ? 'Sending...' : 'Send Message'}</button>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ─── Footer ──────────────────────────────────────────────────────────────────
 const Footer = ({ tweaks }) => {
   const hours = [
     { day: 'Tuesday', time: '10am - 6pm' },
@@ -1156,13 +2055,13 @@ const Footer = ({ tweaks }) => {
   const colLink = { display: 'block', fontFamily: 'var(--font-body)', fontSize: 12, color: 'rgba(255,255,255,0.62)', textDecoration: 'none', marginBottom: 8, transition: 'color 200ms ease', lineHeight: 1.45, textAlign: 'center' };
 
   const exploreLinks = [
-    { label: 'About',      href: MAIN + '#about' },
-    { label: 'Services',   href: MAIN + '#services' },
+    { label: 'About',      href: '#about' },
+    { label: 'Services',   href: '#services' },
     { label: 'New Guests', href: 'new-guests.html' },
     { label: 'Careers',    href: 'careers.html' },
     { label: 'Shop & Gifts', href: 'shop.html' },
     { label: 'Gift Cards', href: LINKS.giftCards, ext: true },
-    { label: 'Contact',    href: MAIN + '#contact' },
+    { label: 'Contact',    href: '#contact' },
   ];
   const followPhotos = ['IMG_2073.jpg','IMG_7704_retouched.jpg','IMG_3283.jpg','IMG_1414.jpg'];
   const paletteDots = [C.burntCopper, C.slateBlue, C.chocolate, C.terracotta, C.cream];
@@ -1418,27 +2317,46 @@ const Footer = ({ tweaks }) => {
   );
 };
 
-// ─── App (sub-page) ───
+// ─── App ──────────────────────────────────────────────────────────────────────
 const App = () => {
   const tweaks = TWEAK_DEFAULTS;
+
   const [scrolled, setScrolled] = React.useState(false);
+  const [activeSection, setActiveSection] = React.useState('hero');
+
   React.useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 60);
+      const sections = ['hero','about','services','ourwork','reviews','team','contact'];
+      const found = sections.find(id => {
+        const el = document.getElementById(id);
+        if (!el) return false;
+        const rect = el.getBoundingClientRect();
+        return rect.top <= 80 && rect.bottom > 80;
+      });
+      if (found) setActiveSection(found);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
   return (
-    <div>
+    <div style={{position:'relative'}}>
+      <div style={{position:'fixed',inset:0,pointerEvents:'none',zIndex:0,
+        background:`radial-gradient(circle at 18% 18%, rgba(59,31,16,0.34) 0 1px, transparent 1.2px),
+                     radial-gradient(circle at 82% 62%, rgba(166,90,24,0.28) 0 1px, transparent 1.3px), var(--white)`,
+        backgroundSize:'4px 4px,6px 6px,auto'}}/>
       <a className="skip-link" href="#main-content">Skip to content</a>
       <Ticker scrolled={scrolled}/>
-      <Nav scrolled={scrolled} activeSection={'shop'} onNav={()=>{}} tweaks={tweaks} solid={true}/>
-      <main id="main-content" style={{ paddingTop: 110 }}>
-        <div style={{ maxWidth: 1320, margin: '0 auto', padding: '14px 56px 0' }} className="cb-back-wrap">
-          <a href={MAIN} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: 'var(--font-body)', fontWeight: 600, fontSize: 11, letterSpacing: '0.15em', textTransform: 'uppercase', color: C.burntCopper, textDecoration: 'none' }}>
-            <span style={{ fontSize: 15, lineHeight: 1 }}>&larr;</span> Back to Ciao Bella
-          </a>
-        </div>
-        <ShopGifting tweaks={tweaks}/>
+      <Nav scrolled={scrolled} activeSection={activeSection} onNav={setActiveSection} tweaks={tweaks}/>
+      <main id="main-content">
+        <Hero tweaks={tweaks} onNav={setActiveSection}/>
+        <About tweaks={tweaks}/>
+        <Services tweaks={tweaks}/>
+        <Gallery tweaks={tweaks}/>
+        <GoogleReviews/>
+        <Team tweaks={tweaks}/>
+        <Contact tweaks={tweaks}/>
       </main>
       <Footer tweaks={tweaks}/>
     </div>
